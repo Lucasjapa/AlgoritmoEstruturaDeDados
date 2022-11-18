@@ -43,7 +43,8 @@ int main(void)
          }
      }*/
 
-    // Tirar Duvida com o professor sobre o valor da posição zero do vetor.
+    // teste
+    //  Tirar Duvida com o professor sobre o valor da posição zero do vetor.
     for (i = 0; i < maxSize; i++)
     {
         printf("%d ", v[i]);
