@@ -5,7 +5,7 @@
 int main(void)
 {
     int n, res, i, aux, j;
-    printf("Informe quantos valores para a sequencia de fibbo?");
+    printf("Informe quantos valores para a sequencia de fibo?");
     scanf("%d", &n);
     int v[n];
     int maxSize = n;
