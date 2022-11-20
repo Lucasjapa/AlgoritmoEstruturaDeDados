@@ -3,78 +3,113 @@
 int main(void)
 {
 
+    // ========= VETORES PARA TESTE ============
     // int v[] = {59, 26, 41, 100, 89, 2};
     // int v[] = {31, 41, 59, 26, 41, 58};
-    int v[] = {31, 41, 31, 31, 41, 58};
+    // int v[] = {31, 41, 31, 31, 41, 58};
     // int v[] = {41, 31, 31, 41, 58};
-    //  int v[] = {31, 41, 59, 26, 41, 58, 9};
-    //  int v[] = {59, 41, 26, 4 , 19};
-    int mediana, aux, j, i, maxSize, m1, m2, rep, max, moda;
+    // int v[] = {31, 41, 59, 26, 41, 58, 9};
+    // int v[] = {59, 41, 26, 4, 19};
+    int v[] = {41, 31, 31, 41, 31, 31, 58, 41, 41, 41, 100, 3, 25, 89, 94, 77, 77, 77, 77, 405, 130};
+
+    int i, maxSize;
 
     maxSize = (sizeof v / sizeof v[0]) - 1;
-    // printf("%d \n", maxSize);
+
+    ordenarVetor(v, maxSize);
+    encontrarMediana(v, maxSize);
+    encontrarModa(v, maxSize);
+}
+
+void ordenarVetor(int vetor[], int maxSize)
+{
+    int i, j, aux;
 
     for (i = 0; i < maxSize; i++)
     {
-        if (v[i] > v[i + 1])
+        if (vetor[i] > vetor[i + 1])
         {
-            aux = v[i];
-            v[i] = v[i + 1];
-            v[i + 1] = aux;
+            aux = vetor[i];
+            vetor[i] = vetor[i + 1];
+            vetor[i + 1] = aux;
         }
         j = i + 1;
 
         while (j > 0)
         {
-            if (v[j] < v[j - 1])
+            if (vetor[j] < vetor[j - 1])
             {
-                aux = v[j];
-                v[j] = v[j - 1];
-                v[j - 1] = aux;
+                aux = vetor[j];
+                vetor[j] = vetor[j - 1];
+                vetor[j - 1] = aux;
             }
             j--;
         }
     }
 
-    int size = maxSize + 1;
+    for (i = 0; i <= maxSize; i++)
+    {
+        printf("%d ", vetor[i]);
+    }
+}
+
+void encontrarMediana(int vetor[], int maxSize)
+{
+
+    int size, m1, m2, mediana;
+    size = maxSize + 1;
 
     if (size % 2 == 0)
     {
-        m1 = v[(size / 2) - 1];
-        m2 = v[(size / 2)];
+        m1 = vetor[(size / 2) - 1];
+        m2 = vetor[(size / 2)];
         mediana = (m1 + m2) / 2;
     }
     else
     {
-        mediana = v[maxSize / 2];
+        mediana = vetor[maxSize / 2];
     }
 
-    rep = 0;
-    max = 0;
+    printf("\nMediana: %d", mediana);
+}
+
+int encontrarModa(int vetor[], int maxSize)
+{
+    int i, j, moda, contRepeat, maxRepeat;
+
+    contRepeat = 0;
+    maxRepeat = 0;
 
     for (i = 0; i <= maxSize; i++)
     {
         j = i;
+        contRepeat = 0;
         while (j < maxSize)
         {
-
-            if (v[i] == v[j + 1])
+            if (vetor[i] == vetor[j + 1])
             {
-                rep++;
+                contRepeat++;
             }
-            if (rep > max)
+            else
             {
-                moda = v[i];
-                max = rep;
-                rep = 0;
+                contRepeat = 0;
+            }
+
+            if (contRepeat == maxRepeat)
+            {
+                moda = 0;
+            }
+
+            if (contRepeat > maxRepeat)
+            {
+                moda = vetor[i];
+                maxRepeat = contRepeat;
             }
             j++;
         }
-        printf("%d ", v[i]);
     }
 
-    printf("\nMediana: %d", mediana);
-    if (rep != max)
+    if (moda != 0)
     {
         printf("\nModa: %d", moda);
     }
