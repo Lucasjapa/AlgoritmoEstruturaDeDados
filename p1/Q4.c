@@ -122,7 +122,7 @@ int main(void)
         {59, 26, 41, 100, 89, 70, 54, 22, 16, 189, 59, 26, 41, 100, 89, 70, 54, 22, 16, 189, 59, 26, 41, 100, 89, 70, 54, 22, 16, 189, 59, 26, 41, 100, 89, 70, 54, 22, 16, 189, 59, 26, 41, 100, 89, 70, 54, 22, 16, 189, 59, 26, 41, 100, 89, 70, 54, 22, 16, 189, 59, 26, 41, 100, 89, 70, 54, 22, 16, 189, 59, 26, 41, 100, 89, 70, 54, 22, 16, 189, 59, 26, 41, 100, 89, 70, 54, 22, 16, 189, 59, 26, 41, 100, 89, 70, 54, 22, 16, 189},
         {59, 26, 41, 100, 89, 70, 54, 22, 16, 189, 59, 26, 41, 100, 89, 70, 54, 22, 16, 189, 59, 26, 41, 100, 89, 70, 54, 22, 16, 189, 59, 26, 41, 100, 89, 70, 54, 22, 16, 189, 59, 26, 41, 100, 89, 70, 54, 22, 16, 189, 59, 26, 41, 100, 89, 70, 54, 22, 16, 189, 59, 26, 41, 100, 89, 70, 54, 22, 16, 189, 59, 26, 41, 100, 89, 70, 54, 22, 16, 189, 59, 26, 41, 100, 89, 70, 54, 22, 16, 189, 59, 26, 41, 100, 89, 70, 54, 22, 16, 189}};
 
-    int i, j, x, y, ci, cf, lf, pag, totalPaginas, totalExtra;
+    int i, j, x, y, colunaInicial, colunaFinal, pag, totalPaginas;
     int linhasSobrando, colunasSobrando,
         extra, paginacaoLinha, paginacaoColuna, linha, marcadorColuna;
 
@@ -140,10 +140,9 @@ int main(void)
 
     i = 0;
     j = 1;
-    cf = 1;
-    ci = 0;
+    colunaFinal = 1;
+    colunaInicial = 0;
     pag = 0;
-    lf = 0;
     extra = 0;
     linha = 0;
 
@@ -155,30 +154,30 @@ int main(void)
         {
             j++;
             i++;
-            ci = 0;
-            cf = 1;
+            colunaInicial = 0;
+            colunaFinal = 1;
         }
         linha = paginacaoLinha * i;
 
         for (x = paginacaoLinha * i; x <= (paginacaoLinha * j) - 1; x++)
         {
 
-            for (y = paginacaoColuna * ci; y <= (paginacaoColuna * cf) - 1; y++)
+            for (y = paginacaoColuna * colunaInicial; y <= (paginacaoColuna * colunaFinal) - 1; y++)
             {
 
                 printf("\tcol%d ", y);
 
-                if (y == ((paginacaoColuna * cf) - 1))
+                if (y == ((paginacaoColuna * colunaFinal) - 1))
                 {
                     printf("\n");
                 }
             }
             printf("row%d ", (linha));
-            for (y = paginacaoColuna * ci; y <= (paginacaoColuna * cf) - 1; y++)
+            for (y = paginacaoColuna * colunaInicial; y <= (paginacaoColuna * colunaFinal) - 1; y++)
             {
                 printf("\t%d ", v[linha][y]);
 
-                if (y == (paginacaoColuna * cf) - 1)
+                if (y == (paginacaoColuna * colunaFinal) - 1)
                 {
                     printf("\n");
                 }
@@ -186,17 +185,16 @@ int main(void)
             linha++;
         }
 
-        ci++;
-        cf++;
+        colunaInicial++;
+        colunaFinal++;
         pag++;
         printf("\n\n");
     }
 
-    totalExtra = 0;
     int pagExtra = 0;
     i++;
-    ci = 0;
-    cf = 1;
+    colunaInicial = 0;
+    colunaFinal = 1;
 
     while (extra < linhasSobrando || extra < colunasSobrando)
     {
@@ -204,8 +202,8 @@ int main(void)
 
         if (pagExtra == marcadorColuna)
         {
-            ci = 0;
-            cf = 1;
+            colunaInicial = 0;
+            colunaFinal = 1;
             pagExtra = 0;
         }
         linha = paginacaoLinha * i;
@@ -213,22 +211,22 @@ int main(void)
         for (x = paginacaoLinha * i; x < (paginacaoLinha * j) + linhasSobrando; x++)
         {
             printf("\n");
-            for (y = paginacaoColuna * ci; y <= (paginacaoColuna * cf) - 1; y++)
+            for (y = paginacaoColuna * colunaInicial; y <= (paginacaoColuna * colunaFinal) - 1; y++)
             {
 
                 printf("\tcol%d ", y);
 
-                if (y == ((paginacaoColuna * cf) - 1))
+                if (y == ((paginacaoColuna * colunaFinal) - 1))
                 {
                     printf("\n");
                 }
             }
             printf("row%d ", linha);
-            for (y = paginacaoColuna * ci; y <= (paginacaoColuna * cf) - 1; y++)
+            for (y = paginacaoColuna * colunaInicial; y <= (paginacaoColuna * colunaFinal) - 1; y++)
             {
                 printf("\t%d ", v[linha][y]);
 
-                if (y == (paginacaoColuna * cf) - 1)
+                if (y == (paginacaoColuna * colunaFinal) - 1)
                 {
                     printf("\n");
                 }
@@ -236,8 +234,8 @@ int main(void)
             linha++;
         }
 
-        ci++;
-        cf++;
+        colunaInicial++;
+        colunaFinal++;
         pag++;
         extra++;
         pagExtra++;
