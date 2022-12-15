@@ -46,15 +46,13 @@ typedef struct COLECAO_FILAS
     struct FILA_DO_DIA *filas[];
 };
 
-struct DATA criarData(int dia, int mes, int ano)
+criarData(struct DATA *data, int dia, int mes, int ano)
 {
-    struct DATA data;
+    // *data = (struct DATA *)malloc(sizeof(struct DATA));
 
-    data.dia = dia;
-    data.mes = mes;
-    data.ano = ano;
-
-    return data;
+    data->dia = dia;
+    data->mes = mes;
+    data->ano = ano;
 }
 
 /*criarAluno(
@@ -92,17 +90,19 @@ int main()
     int posInicialFila = 0;
     char *nome = "Lucas cavalcante";
     char *matricula = "1234asd";
-    struct DATA data;
+    struct DATA *data;
     // struct FILA_DO_DIA *fila;
     struct REGISTRO_ALUNO *listaAlunos[qtdAlunos], *alu;
 
-    data = criarData(30, 11, 2022);
+    data = (struct DATA *)malloc(sizeof(struct DATA));
+
+    criarData(data, 14, 12, 2022);
 
     // criarAluno(&alu, posInicialFila, nome, matricula, 26, 3);
-    fila = iniciarFila(data, qtdAlunos, &listaAlunos);
+    // fila = iniciarFila(data, qtdAlunos, &listaAlunos);
 
     printf("========= DATA A FILA ==========\n");
-    printf("%d/%d/%d\n", fila->data_fila.dia, fila->data_fila.mes, fila->data_fila.ano);
+    printf("%d/%d/%d\n", data->dia, data->mes, data->ano);
 
     /* printf("========= Aluno ==========\n");
      printf("id:%d\n", alu->id);
