@@ -1,13 +1,15 @@
 #include <stdio.h>
 #include <string.h>
 
+#define QTDALUNOS 2
+
 typedef int TIPO_IDENTIFICADOR;
 
 typedef struct REGISTRO_ALUNO
 {
     TIPO_IDENTIFICADOR id;
-    char *nome[100];
-    char *matricula[50];
+    char *nome;
+    char *matricula;
     int idade;
     int periodo;
     //   int curso;
@@ -35,9 +37,9 @@ typedef struct DATA
 
 typedef struct FILA_DO_DIA
 {
-    struct DATA data_fila;
+    struct DATA *data_fila;
     int qtd_alunos;
-    struct REGISTRO_ALUNO *alunos[];
+    struct REGISTRO_ALUNO *alunos;
 };
 
 typedef struct COLECAO_FILAS
@@ -48,66 +50,59 @@ typedef struct COLECAO_FILAS
 
 criarData(struct DATA *data, int dia, int mes, int ano)
 {
-    // *data = (struct DATA *)malloc(sizeof(struct DATA));
-
     data->dia = dia;
     data->mes = mes;
     data->ano = ano;
 }
 
-/*criarAluno(
-    struct REGISTRO_ALUNO *alu,
-    TIPO_IDENTIFICADOR id,
+criarFila(
+    struct FILA_DO_DIA *fila,
+    struct DATA *data,
+    struct REGISTRO_ALUNO *listaAlunos)
+{
+    fila->data_fila = data;
+    fila->qtd_alunos = QTDALUNOS;
+    fila->alunos = listaAlunos;
+}
+
+addAluno(
+    struct FILA_DO_DIA *fila,
     char *nome,
     char *matricula,
     int idade,
     int periodo)
 {
-
-    alu->id = id;
-    strcpy(alu->nome, nome);
-    strcpy(alu->matricula, matricula);
-    alu->idade = idade;
-    alu->periodo = periodo;
-}*/
-
-struct FILA_DO_DIA *fila;
-
-iniciarFila(struct DATA data, int qtdAlunos, struct REGISTRO_ALUNO *listaAlunos[])
-{
-    // struct FILA_DO_DIA *fi;
-
-    fila->data_fila = data;
-    fila->qtd_alunos = qtdAlunos;
-    fila->alunos[qtdAlunos] = listaAlunos;
-
-    // return fi;
+    int id = 0;
+    fila->alunos[id].id = id;
+    fila->alunos[id].nome = nome;
+    fila->alunos[id].matricula = matricula;
+    fila->alunos[id].idade = idade;
+    fila->alunos[id].periodo = periodo;
 }
 
 int main()
 {
-    int qtdAlunos = 2;
-    int posInicialFila = 0;
-    char *nome = "Lucas cavalcante";
-    char *matricula = "1234asd";
     struct DATA *data;
-    // struct FILA_DO_DIA *fila;
-    struct REGISTRO_ALUNO *listaAlunos[qtdAlunos], *alu;
+    struct FILA_DO_DIA *fila;
+    struct REGISTRO_ALUNO *listaAlunos[QTDALUNOS], *alu;
 
     data = (struct DATA *)malloc(sizeof(struct DATA));
+    fila = (struct FILA_DO_DIA *)malloc(sizeof(struct FIlA_DO_DIA *));
 
     criarData(data, 14, 12, 2022);
+    criarFila(fila, data, listaAlunos);
+
+    addAluno(fila, "Lucas Cavalcante", "1234a", 26, 1);
 
     // criarAluno(&alu, posInicialFila, nome, matricula, 26, 3);
-    // fila = iniciarFila(data, qtdAlunos, &listaAlunos);
 
     printf("========= DATA A FILA ==========\n");
-    printf("%d/%d/%d\n", data->dia, data->mes, data->ano);
+    printf("%d/%d/%d\n", fila->data_fila->dia, fila->data_fila->mes, fila->data_fila->ano);
 
-    /* printf("========= Aluno ==========\n");
-     printf("id:%d\n", alu->id);
-     printf("nome:%s\n", alu->nome);
-     printf("matricula:%s\n", alu->matricula);
-     printf("idade:%d\n", alu->idade);
-     printf("periodo:%d\n", alu->periodo);*/
+    printf("========= Aluno ==========\n");
+    printf("id:%d\n", fila->alunos[0].id);
+    printf("nome:%s\n", fila->alunos[0].nome);
+    printf("matricula:%s\n", fila->alunos[0].matricula);
+    printf("idade:%d\n", fila->alunos[0].idade);
+    printf("periodo:%d\n", fila->alunos[0].periodo);
 }
