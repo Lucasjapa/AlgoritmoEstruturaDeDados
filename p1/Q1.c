@@ -2,8 +2,10 @@
 #include <string.h>
 
 #define QTDALUNOS 3
+#define QTDFILAS 2
 
 int id = 1;
+int qtdFilas = 0;
 
 typedef int TIPO_IDENTIFICADOR;
 
@@ -46,6 +48,17 @@ typedef struct COLECAO_FILAS
     struct FILA_DO_DIA *filas;
 } COLECAO_FILAS;
 
+COLECAO_FILAS iniciarListaFila()
+{
+    COLECAO_FILAS *listaFila;
+    listaFila = malloc(sizeof(COLECAO_FILAS));
+
+    listaFila->qtd_filas = 0;
+    listaFila->filas = (FILA_DO_DIA *)malloc(QTDFILAS * sizeof(FILA_DO_DIA));
+
+    return *listaFila;
+}
+
 criarData(DATA *data, int dia, int mes, int ano)
 {
     data->dia = dia;
@@ -53,12 +66,52 @@ criarData(DATA *data, int dia, int mes, int ano)
     data->ano = ano;
 }
 
-criarFila(FILA_DO_DIA *fila, DATA data)
+criarFila(COLECAO_FILAS *listaFila, DATA data)
 {
-    fila->data_fila = data;
-    fila->qtd_alunos = QTDALUNOS;
-    fila->pos = 0;
-    fila->alunos = (REGISTRO_ALUNO *)malloc(QTDALUNOS * sizeof(REGISTRO_ALUNO));
+
+    FILA_DO_DIA *fila;
+    fila = malloc(sizeof(FILA_DO_DIA));
+    int filaExist = 0;
+
+    if (listaFila->qtd_filas == 0)
+    {
+        fila->data_fila = data;
+        fila->qtd_alunos = QTDALUNOS;
+        fila->pos = 0;
+        fila->alunos = (REGISTRO_ALUNO *)malloc(QTDALUNOS * sizeof(REGISTRO_ALUNO));
+
+        listaFila->filas[listaFila->qtd_filas] = *fila;
+        listaFila->qtd_filas++;
+    }
+    else
+    {
+        for (int i = 0; i < listaFila->qtd_filas; i++)
+        {
+            if (listaFila->filas[i].data_fila.dia == data.dia &&
+                listaFila->filas[i].data_fila.mes == data.mes &&
+                listaFila->filas[i].data_fila.ano == data.ano)
+            {
+                filaExist = 1;
+            }
+        }
+
+        if (filaExist == 0)
+        {
+            fila->data_fila = data;
+            fila->qtd_alunos = QTDALUNOS;
+            fila->pos = 0;
+            fila->alunos = (REGISTRO_ALUNO *)malloc(QTDALUNOS * sizeof(REGISTRO_ALUNO));
+
+            listaFila->filas[listaFila->qtd_filas] = *fila;
+            listaFila->qtd_filas++;
+        }
+        else
+        {
+            printf("\nJa existe uma fila criada para essa data\n\n");
+        }
+
+        filaExist = 0;
+    }
 }
 
 REGISTRO_ALUNO criarAluno(char *nome, char *matricula, int idade, int periodo)
@@ -74,7 +127,8 @@ REGISTRO_ALUNO criarAluno(char *nome, char *matricula, int idade, int periodo)
     id++;
     return *aluno;
 }
-addAluno(FILA_DO_DIA *fila, REGISTRO_ALUNO aluno)
+
+adiciona(FILA_DO_DIA *fila, REGISTRO_ALUNO aluno)
 {
     if (fila->pos < QTDALUNOS)
     {
@@ -87,15 +141,35 @@ addAluno(FILA_DO_DIA *fila, REGISTRO_ALUNO aluno)
     }
 }
 
-removerAluno(FILA_DO_DIA *fila)
+removeUltimo(FILA_DO_DIA *fila)
+{
+    if (fila->pos > 0)
+    {
+        fila->pos--;
+    }
+    else
+    {
+        printf("\nERROR: Fila vazia, nao tem mais aluno para remover.\n");
+    }
+}
+
+removePrimeiro(FILA_DO_DIA *fila)
 {
     int i, pos;
     pos = fila->pos;
-    for (i = 0; i < pos; i++)
+
+    if (fila->pos > 0)
     {
-        fila->alunos[i] = fila->alunos[i + 1];
+        for (i = 0; i < pos; i++)
+        {
+            fila->alunos[i] = fila->alunos[i + 1];
+        }
+        fila->pos--;
     }
-    fila->pos--;
+    else
+    {
+        printf("\nERROR: Fila vazia, nao tem mais aluno para remover.\n");
+    }
 }
 
 listarAlunos(FILA_DO_DIA *fila)
@@ -114,36 +188,59 @@ listarAlunos(FILA_DO_DIA *fila)
     }
 }
 
+listarFilas(COLECAO_FILAS *listaFila)
+{
+    printf("========= FILAS EXISTENTES ==========\n");
+    for (int i = 0; i < listaFila->qtd_filas; i++)
+    {
+        printf("Fila %d - DATA:%d/%d/%d\n", i, listaFila->filas[i].data_fila.dia,
+               listaFila->filas[i].data_fila.mes,
+               listaFila->filas[i].data_fila.ano);
+    }
+}
+
 int main()
 {
     int i;
     DATA *data;
-    FILA_DO_DIA *fila;
+    COLECAO_FILAS listaFilas;
     REGISTRO_ALUNO aluno;
 
     data = (DATA *)malloc(sizeof(DATA));
-    fila = (FILA_DO_DIA *)malloc(sizeof(FILA_DO_DIA *));
+
+    listaFilas = iniciarListaFila();
 
     criarData(data, 14, 12, 2022);
-    criarFila(fila, *data);
-    printf("========= DATA A FILA ==========\n");
-    printf("%d/%d/%d\n", fila->data_fila.dia, fila->data_fila.mes, fila->data_fila.ano);
+    criarFila(&listaFilas, *data);
+    // criarData(data, 14, 12, 2022);
+    criarData(data, 15, 12, 2022);
+    criarFila(&listaFilas, *data);
 
-    aluno = criarAluno("Lucas Cavalcante", "1", 26, 1);
-    addAluno(fila, aluno);
-    aluno = criarAluno("joao luis", "123rtt", 18, 4);
-    addAluno(fila, aluno);
-    aluno = criarAluno("Maria fernanda", "15555", 20, 5);
+    listarFilas(&listaFilas);
 
-    addAluno(fila, aluno);
-    listarAlunos(fila);
-    removerAluno(fila);
-    listarAlunos(fila);
+    // aluno = criarAluno("Lucas Cavalcante", "1", 26, 1);
+    // adiciona(fila, aluno);
+    // aluno = criarAluno("joao luis", "123rtt", 18, 4);
+    // adiciona(fila, aluno);
+    // aluno = criarAluno("Maria fernanda", "15555", 20, 5);
+    // adiciona(fila, aluno);
 
-    aluno = criarAluno("Jose teste", "fff11", 29, 7);
-    addAluno(fila, aluno);
+    // listarAlunos(fila);
+    // removePrimeiro(fila);
+    // removePrimeiro(fila);
+    // removePrimeiro(fila);
+    // removePrimeiro(fila);
+    // removeUltimo(fila);
+    // removeUltimo(fila);
+    // removeUltimo(fila);
+    // removeUltimo(fila);
+    // listarAlunos(fila);
 
-    listarAlunos(fila);
-    removerAluno(fila);
-    listarAlunos(fila);
+    // aluno = criarAluno("Jose teste", "fff11", 29, 7);
+    // adiciona(fila, aluno);
+
+    // listarAlunos(fila);
+    // removePrimeiro(fila);
+    // removeUltimo(fila);
+    // listarAlunos(fila);
 }
