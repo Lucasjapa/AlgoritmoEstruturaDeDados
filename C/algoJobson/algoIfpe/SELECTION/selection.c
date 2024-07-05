@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-// Função para gerar um array de tamanho 'tamanho'
+// Função para gerar um array
 int *gerarArrayAleatorio(int tamanho)
 {
     int *array = (int *)malloc(tamanho * sizeof(int)); // Aloca memória para o array
